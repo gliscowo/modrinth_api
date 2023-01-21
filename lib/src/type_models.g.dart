@@ -282,7 +282,7 @@ ModrinthModeratorMessage _$ModrinthModeratorMessageFromJson(
         Map<String, dynamic> json) =>
     ModrinthModeratorMessage(
       json['message'] as String,
-      json['body'] as String,
+      json['body'] as String?,
     );
 
 Map<String, dynamic> _$ModrinthModeratorMessageToJson(

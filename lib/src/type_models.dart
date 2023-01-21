@@ -250,7 +250,7 @@ class ModrinthLicense {
 @JsonSerializable(fieldRename: FieldRename.snake)
 class ModrinthModeratorMessage {
   final String message;
-  final String body;
+  final String? body;
 
   ModrinthModeratorMessage(this.message, this.body);
 
