@@ -39,7 +39,7 @@ class ModrinthApi {
     return _getObject(ModrinthUser.fromJson, "user/$idOrUsername").nullifyBadStatus();
   }
 
-  Future<ModrinthVersion?> latestWithLoaderAndGameVersion(File file, String loader, String gameVersion) {
+  Future<ModrinthVersion?> latestFileWithLoaderAndGameVersion(File file, String loader, String gameVersion) {
     return file
         .readAsBytes()
         .then(sha512.convert)
@@ -48,6 +48,24 @@ class ModrinthApi {
               "game_versions": [gameVersion]
             }))
         .nullifyBadStatus();
+  }
+
+  Future<Map<File, ModrinthVersion>?> latestFilesWithLoaderAndGameVersion(
+      List<File> files, String loader, String gameVersion) async {
+    final hashes = {for (var file in files) sha512.convert(file.readAsBytesSync()).toString(): file};
+
+    return _postAndGetObject(
+      (response) => <File, ModrinthVersion>{
+        for (var hash in response.keys) hashes[hash]!: ModrinthVersion.fromJson(response[hash])
+      },
+      "version_files/update",
+      {
+        "hashes": [for (var digest in hashes.keys) digest],
+        "algorithm": "sha512",
+        "loaders": [loader],
+        "game_versions": [gameVersion]
+      },
+    ).nullifyBadStatus();
   }
 
   Future<List<ModrinthVersion>?> getProjectVersions(String idOrSlug) {
