@@ -172,7 +172,7 @@ class ModrinthProject {
   final String? iconUrl;
   final String id;
   final String team;
-  final String? moderatorMessage;
+  final ModrinthModeratorMessage? moderatorMessage;
   final String published;
   final String updated;
   final int followers;
@@ -242,6 +242,20 @@ class ModrinthLicense {
 
   factory ModrinthLicense.fromJson(Map<String, dynamic> json) => _$ModrinthLicenseFromJson(json);
   Map<String, dynamic> toJson() => _$ModrinthLicenseToJson(this);
+
+  @override
+  String toString() => encoder.convert(toJson());
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class ModrinthModeratorMessage {
+  final String message;
+  final String body;
+
+  ModrinthModeratorMessage(this.message, this.body);
+
+  factory ModrinthModeratorMessage.fromJson(Map<String, dynamic> json) => _$ModrinthModeratorMessageFromJson(json);
+  Map<String, dynamic> toJson() => _$ModrinthModeratorMessageToJson(this);
 
   @override
   String toString() => encoder.convert(toJson());

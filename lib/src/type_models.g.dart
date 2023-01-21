@@ -183,7 +183,10 @@ ModrinthProject _$ModrinthProjectFromJson(Map<String, dynamic> json) =>
       json['icon_url'] as String?,
       json['id'] as String,
       json['team'] as String,
-      json['moderator_message'] as String?,
+      json['moderator_message'] == null
+          ? null
+          : ModrinthModeratorMessage.fromJson(
+              json['moderator_message'] as Map<String, dynamic>),
       json['published'] as String,
       json['updated'] as String,
       json['followers'] as int,
@@ -273,4 +276,18 @@ Map<String, dynamic> _$ModrinthLicenseToJson(ModrinthLicense instance) =>
       'id': instance.id,
       'name': instance.name,
       'url': instance.url,
+    };
+
+ModrinthModeratorMessage _$ModrinthModeratorMessageFromJson(
+        Map<String, dynamic> json) =>
+    ModrinthModeratorMessage(
+      json['message'] as String,
+      json['body'] as String,
+    );
+
+Map<String, dynamic> _$ModrinthModeratorMessageToJson(
+        ModrinthModeratorMessage instance) =>
+    <String, dynamic>{
+      'message': instance.message,
+      'body': instance.body,
     };
