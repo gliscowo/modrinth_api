@@ -1,8 +1,9 @@
 /// Support for doing something awesome.
 ///
 /// More dartdocs go here.
-library modrinth_api;
+library;
 
+export 'src/models/request_models.dart';
+export 'src/models/response_models.dart';
 export 'src/modrinth_api_base.dart' show ModrinthApi;
-export 'src/query_schemas.dart';
-export 'src/type_models.dart';
+export 'src/result.dart';

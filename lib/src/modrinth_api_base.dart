@@ -1,135 +1,129 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:crypto/crypto.dart';
 import 'package:http/http.dart';
 
-import 'query_schemas.dart';
-import 'type_models.dart';
+import 'client.dart';
+import 'errors.dart';
+import 'models/request_models.dart';
+import 'models/response_models.dart';
+import 'routes/projects.dart';
+import 'routes/search.dart';
+import 'routes/tags.dart';
+import 'routes/teams.dart';
+import 'routes/users.dart';
+import 'routes/version_files.dart';
+import 'routes/versions.dart';
 
-const baseUrl = "https://api.modrinth.com/v2";
 const encoder = JsonEncoder.withIndent("    ");
 
 typedef JsonObject = Map<String, dynamic>;
 typedef JsonArray = List<dynamic>;
 
 class ModrinthApi {
-  final Client _client = Client();
-  final String _userAgent;
+  final ModrinthApiClient _client;
+
+  late final Projects projects;
+  late final Versions versions;
+  late final VersionFiles versionFiles;
+  late final Users users;
+  late final Teams teams;
+  late final Tags tags;
 
   /// Create a new API client
   ///
-  /// Modrinth requires that you specifiy a user agent
-  /// that uniquely identifies your application as [_userAgent]
-  ModrinthApi.createClient(this._userAgent);
-
-  Future<ModrinthSearchQueryResponse> search(String searchTerm) {
-    return _getObject(ModrinthSearchQueryResponse.fromJson, "search?query=$searchTerm");
+  /// Modrinth requires that you specifiy a [userAgent]
+  /// that uniquely identifies your application
+  ModrinthApi.createClient(
+    String userAgent, {
+    String baseUrl = "https://api.modrinth.com/v2/",
+    RatelimitHandling ratelimitHandling = RatelimitHandling.error,
+    String? token,
+  }) : _client = ModrinthApiClient(userAgent, baseUrl, ratelimitHandling, token) {
+    projects = Projects(_client);
+    versions = Versions(_client);
+    versionFiles = VersionFiles(_client);
+    users = Users(_client);
+    teams = Teams(_client);
+    tags = Tags(_client);
   }
 
-  Future<ModrinthProject?> getProject(String idOrSlug) {
-    return _getObject(ModrinthProject.fromJson, "project/$idOrSlug").nullifyBadStatus();
-  }
+  Future<LabrinthInstanceStatistics> fetchStatistics() =>
+      _client.get("statistics".uri).expect(const {200}).parse(LabrinthInstanceStatistics.fromJson);
 
-  Future<ModrinthVersion?> getVersion(String id) {
-    return _getObject(ModrinthVersion.fromJson, "version/$id").nullifyBadStatus();
-  }
+  Future<ModrinthSearchQueryResponse> search({
+    String? query,
+    FacetAndBlock? facets,
+    ModrinthSearchIndexType? index,
+    int? offset,
+    int? limit,
+  }) {
+    var reponse = _client.get("search".uri.replace(queryParameters: {
+      if (query != null) "query": query,
+      if (facets != null) "facets": facets.queryString,
+      if (index != null) "index": index.name,
+      if (offset != null) "offset": offset.toString(),
+      if (limit != null) "limit": limit.toString(),
+    }));
 
-  Future<ModrinthUser?> getUser(String idOrUsername) {
-    return _getObject(ModrinthUser.fromJson, "user/$idOrUsername").nullifyBadStatus();
-  }
-
-  Future<ModrinthVersion?> latestFileWithLoaderAndGameVersion(File file, String loader, String gameVersion) {
-    return file
-        .readAsBytes()
-        .then(sha512.convert)
-        .then((digest) => _postAndGetObject(ModrinthVersion.fromJson, "version_file/$digest/update?algorithm=sha512", {
-              "loaders": [loader],
-              "game_versions": [gameVersion]
-            }))
-        .nullifyBadStatus();
-  }
-
-  Future<Map<File, ModrinthVersion>?> latestFilesWithLoaderAndGameVersion(
-      List<File> files, String loader, String gameVersion) async {
-    final hashes = {for (var file in files) sha512.convert(file.readAsBytesSync()).toString(): file};
-
-    return _postAndGetObject(
-      (response) => <File, ModrinthVersion>{
-        for (var hash in response.keys) hashes[hash]!: ModrinthVersion.fromJson(response[hash])
-      },
-      "version_files/update",
-      {
-        "hashes": [for (var digest in hashes.keys) digest],
-        "algorithm": "sha512",
-        "loaders": [loader],
-        "game_versions": [gameVersion]
-      },
-    ).nullifyBadStatus();
-  }
-
-  Future<List<ModrinthVersion>?> getProjectVersions(String idOrSlug) {
-    return _get<JsonArray>("project/$idOrSlug/version")
-        .then((array) => array.map((e) => ModrinthVersion.fromJson(e)).toList())
-        .nullifyBadStatus();
-  }
-
-  Future<T> _getObject<T>(T Function(JsonObject) deserializer, String path) {
-    return _get<JsonObject>(path).then(deserializer);
-  }
-
-  Future<T> _postAndGetObject<T>(T Function(JsonObject) deserializer, String path, JsonObject body) {
-    return _post<JsonObject>(path, body).then(deserializer);
-  }
-
-  Future<T> _get<T>(String path) {
-    return _client.get(route(path), headers: {HttpHeaders.userAgentHeader: _userAgent}).then((response) {
-      if (response.statusCode >= 400) {
-        throw BadStatusException(response.statusCode);
-      }
-
-      return jsonDecode(utf8.decode(response.bodyBytes));
-    });
-  }
-
-  Future<T> _post<T>(String path, JsonObject body) {
-    return _client.post(route(path),
-        body: jsonEncode(body),
-        encoding: utf8,
-        headers: {"content-type": "application/json", HttpHeaders.userAgentHeader: _userAgent}).then((response) {
-      if (response.statusCode >= 400) {
-        throw BadStatusException(response.statusCode);
-      }
-
-      return jsonDecode(utf8.decode(response.bodyBytes));
-    });
+    return reponse.errorsOn(const {400}).parse(ModrinthSearchQueryResponse.fromJson);
   }
 
   /// Closes the HTTP client associated with this API client.
   ///
   /// This **needs** to be called at the end of an application's lifecycle,
   /// otherwise the process will hang and not exit
-  void dispose() {
-    _client.close();
-  }
+  void dispose() => _client.close();
 }
 
-Uri route(String route) => Uri.parse("$baseUrl/$route");
+enum RatelimitHandling {
+  /// When the API reports the rate limit as exceeded,
+  /// carry on as if nothing happened
+  ignore,
 
-class BadStatusException implements Exception {
-  final int code;
-  BadStatusException(this.code);
+  /// Throw a [RatelimitExceededException] if the API
+  /// reports the rate limit as exceeded to pass
+  /// responsibility to the calling function
+  error,
+
+  /// When the API reports the rate limit as exceeded,
+  /// wait until the current rate limit window resets
+  /// and try again
+  wait,
 }
 
-extension Nullable<T> on Future<T> {
-  Future<T?> nullifyBadStatus() {
-    return nullifyOnError((error) => error is BadStatusException);
-  }
-
-  Future<T?> nullifyOnError([bool Function(dynamic)? filter]) {
-    return then<T?>((value) => value).catchError((error) {
-      if (filter != null && !filter(error)) throw error;
-      return null;
+extension Errors on Future<Response> {
+  Future<Response> errorsOn(Set<int> statusCodes) {
+    return then((response) {
+      if (statusCodes.contains(response.statusCode)) {
+        var exception = jsonDecode(utf8.decode(response.bodyBytes));
+        throw ModrinthException(
+          response.statusCode,
+          exception["error"] as String,
+          exception["description"] as String,
+        );
+      } else {
+        return response;
+      }
     });
+  }
+
+  Future<Response> expect(Set<int> statusCodes) {
+    return then((response) {
+      if (statusCodes.contains(response.statusCode)) return response;
+      if (response.statusCode == 404) throw const NoSuchResourceException();
+
+      throw InvalidApiResponseException(response.statusCode, statusCodes, utf8.decode(response.bodyBytes));
+    });
+  }
+
+  Future<T> parse<J, T>(T Function(J) parser) {
+    return then((response) {
+      if (response.statusCode == 404) throw const NoSuchResourceException();
+      return parser(jsonDecode(utf8.decode(response.bodyBytes)));
+    });
+  }
+
+  Future<T?> parseOrNull<J, T>(T Function(J) parser) {
+    return then((response) => response.statusCode != 404 ? parser(jsonDecode(utf8.decode(response.bodyBytes))) : null);
   }
 }
