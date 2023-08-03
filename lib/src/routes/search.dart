@@ -4,9 +4,9 @@ class Facet implements FacetOrBlock {
   final String type;
   final String value;
 
-  Facet.category(this.value) : type = "categories";
-  Facet.version(this.value) : type = "versions";
-  Facet.license(this.value) : type = "license";
+  const Facet.category(this.value) : type = "categories";
+  const Facet.version(this.value) : type = "versions";
+  const Facet.license(this.value) : type = "license";
   Facet.projectType(ModrinthProjectType type)
       : type = "project_type",
         value = type.name;

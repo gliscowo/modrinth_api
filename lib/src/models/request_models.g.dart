@@ -109,6 +109,9 @@ Map<String, dynamic> _$CreateProjectToJson(CreateProject instance) {
   val['license_id'] = instance.licenseId;
   writeNotNull('license_url', instance.licenseUrl);
   val['project_type'] = _$ModrinthProjectTypeEnumMap[instance.projectType]!;
+  val['initial_versions'] = instance.initialVersions;
+  val['is_draft'] = instance.isDraft;
+  val['gallery_items'] = instance.galleryItems;
   return val;
 }
 
@@ -174,7 +177,7 @@ Map<String, dynamic> _$CreateVersionToJson(CreateVersion instance) {
 
   writeNotNull('changelog', instance.changelog);
   val['dependencies'] = instance.dependencies;
-  writeNotNull('game_versions', instance.gameVersions);
+  val['game_versions'] = instance.gameVersions;
   val['version_type'] = _$ModrinthVersionTypeEnumMap[instance.versionType]!;
   val['loaders'] = instance.loaders;
   val['featured'] = instance.featured;

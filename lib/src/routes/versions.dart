@@ -47,8 +47,8 @@ class Versions {
 
   Future<void> schedule(String id, DateTime time, ModrinthVersionStatus requestedStatus) =>
       _client.postJson("version/$id/schedule".uri, {
-        "time": time.toIso8601String(),
-        "requested_status": requestedStatus,
+        "time": time.toUtc().toIso8601String(),
+        "requested_status": requestedStatus.name,
       }).errorsOn(const {400, 401}).expect(const {204});
 
   Future<Iterable<ModrinthVersion>> getMultiple(List<String> ids) => _client

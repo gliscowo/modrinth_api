@@ -38,7 +38,7 @@ class Users {
   Future<void> updateAvatar(String idOrUsername, Uint8List avatarData, String iconFilename) {
     final imageType = extension(iconFilename).substring(1);
     return _client.patch(
-      "project/$idOrUsername/icon".uri,
+      "user/$idOrUsername/icon?ext=$imageType".uri,
       encoding: utf8,
       body: avatarData,
       headers: {HttpHeaders.contentTypeHeader: "image/$imageType"},

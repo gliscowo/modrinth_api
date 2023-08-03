@@ -45,7 +45,7 @@ class ModrinthProject {
   final List<String>? loaders;
   final List<ModrinthGalleryEntry>? gallery;
 
-  ModrinthProject(
+  const ModrinthProject(
     this.slug,
     this.title,
     this.description,
@@ -91,7 +91,7 @@ class ModrinthDonationUrl {
   final String? platform;
   final String? url;
 
-  ModrinthDonationUrl({
+  const ModrinthDonationUrl({
     this.id,
     this.platform,
     this.url,
@@ -113,7 +113,7 @@ class ModrinthGalleryEntry {
   final String created;
   final int? ordering;
 
-  ModrinthGalleryEntry(
+  const ModrinthGalleryEntry(
     this.url,
     this.featured,
     this.title,
@@ -135,7 +135,7 @@ class ModrinthLicense {
   final String? name;
   final String? url;
 
-  ModrinthLicense(
+  const ModrinthLicense(
     this.id,
     this.name,
     this.url,
@@ -153,7 +153,7 @@ class ModrinthModeratorMessage {
   final String message;
   final String? body;
 
-  ModrinthModeratorMessage(
+  const ModrinthModeratorMessage(
     this.message,
     this.body,
   );
@@ -208,7 +208,7 @@ class ModrinthSearchResult {
   final List<String>? gallery;
   final String? featureGallery;
 
-  ModrinthSearchResult(
+  const ModrinthSearchResult(
     this.slug,
     this.title,
     this.description,
@@ -240,22 +240,21 @@ class ModrinthSearchResult {
 }
 
 @JsonSerializable()
-class ModrinthSearchQueryResponse {
+class ModrinthSearchResponse {
   final List<ModrinthSearchResult> hits;
   final int offset;
   final int limit;
   final int totalHits;
 
-  ModrinthSearchQueryResponse(
+  const ModrinthSearchResponse(
     this.hits,
     this.offset,
     this.limit,
     this.totalHits,
   );
 
-  factory ModrinthSearchQueryResponse.fromJson(Map<String, dynamic> json) =>
-      _$ModrinthSearchQueryResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$ModrinthSearchQueryResponseToJson(this);
+  factory ModrinthSearchResponse.fromJson(Map<String, dynamic> json) => _$ModrinthSearchResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$ModrinthSearchResponseToJson(this);
 
   @override
   String toString() => encoder.convert(toJson());
@@ -282,7 +281,7 @@ class ModrinthVersion {
   final int downloads;
   final List<ModrinthFile> files;
 
-  ModrinthVersion(
+  const ModrinthVersion(
     this.name,
     this.versionNumber,
     this.changelog,
@@ -330,7 +329,7 @@ class ModrinthDependency {
   final String? fileName;
   final ModrinthDependencyType dependencyType;
 
-  ModrinthDependency(
+  const ModrinthDependency(
     this.versionId,
     this.projectId,
     this.fileName,
@@ -360,7 +359,7 @@ class ModrinthFile {
   final int size;
   final ModrinthFileType? fileType;
 
-  ModrinthFile(
+  const ModrinthFile(
     this.hashes,
     this.url,
     this.filename,
@@ -398,7 +397,7 @@ class ModrinthUser {
   final ModrinthUserRole role;
   final int? badges;
 
-  ModrinthUser(
+  const ModrinthUser(
     this.username,
     this.name,
     this.email,
@@ -432,7 +431,7 @@ class ModrinthPayoutData {
   final ModrinthPayoutWalletType? payoutWalletType;
   final String? payoutAddress;
 
-  ModrinthPayoutData(
+  const ModrinthPayoutData(
     this.balance,
     this.payoutWallet,
     this.payoutWalletType,
@@ -469,7 +468,7 @@ class ModrinthNotification {
   final String created;
   final List<Map<String, dynamic>>? actions;
 
-  ModrinthNotification(
+  const ModrinthNotification(
     this.id,
     this.userId,
     this.type,
@@ -500,7 +499,7 @@ class ModrinthPayoutHistory {
   final String? lastMonth;
   final List<ModrinthPayout>? payouts;
 
-  ModrinthPayoutHistory(
+  const ModrinthPayoutHistory(
     this.allTime,
     this.lastMonth,
     this.payouts,
@@ -519,7 +518,7 @@ class ModrinthPayout {
   final String? amount;
   final String? status;
 
-  ModrinthPayout(
+  const ModrinthPayout(
     this.created,
     this.amount,
     this.status,
@@ -542,10 +541,10 @@ class ModrinthTeamMember {
   @JsonKey(toJson: ModrinthPermissions.toJson)
   final ModrinthPermissions? permissions;
   final bool accepted;
-  final int? payoutsSplit;
+  final double? payoutsSplit;
   final int? ordering;
 
-  ModrinthTeamMember(
+  const ModrinthTeamMember(
     this.teamId,
     this.user,
     this.role,
@@ -617,7 +616,7 @@ class ModrinthCategory {
   final ModrinthProjectType projectType;
   final String header;
 
-  ModrinthCategory(
+  const ModrinthCategory(
     this.iconSvg,
     this.name,
     this.projectType,
@@ -638,7 +637,7 @@ class ModrinthLoader {
   final String name;
   final List<ModrinthProjectType> supportedProjectTypes;
 
-  ModrinthLoader(
+  const ModrinthLoader(
     this.iconSvg,
     this.name,
     this.supportedProjectTypes,
@@ -659,7 +658,7 @@ class ModrinthGameVersion {
   final String releaseDate;
   final bool major;
 
-  ModrinthGameVersion(
+  const ModrinthGameVersion(
     this.version,
     this.versionType,
     this.releaseDate,
@@ -682,7 +681,7 @@ class ModrinthLicenseIdentifier {
   @JsonKey(name: "name")
   final String fullName;
 
-  ModrinthLicenseIdentifier(
+  const ModrinthLicenseIdentifier(
     this.shortName,
     this.fullName,
   );
@@ -701,7 +700,7 @@ class ModrinthDonationPlatform {
   @JsonKey(name: "name")
   final String fullName;
 
-  ModrinthDonationPlatform(
+  const ModrinthDonationPlatform(
     this.shortName,
     this.fullName,
   );
@@ -722,7 +721,7 @@ class LabrinthInstanceStatistics {
   final int? files;
   final int? authors;
 
-  LabrinthInstanceStatistics(
+  const LabrinthInstanceStatistics(
     this.projects,
     this.versions,
     this.files,

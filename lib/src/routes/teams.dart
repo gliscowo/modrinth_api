@@ -22,7 +22,7 @@ class Teams {
 
   Future<void> join(String id) => _client.post("team/$id/join".uri).errorsOn(const {401}).expect(const {204});
 
-  Future<void> modifyMemberPermissions(String id, String userId, ModifyTeamMember request) =>
+  Future<void> modify(String id, String userId, ModifyTeamMember request) =>
       _client.patchJson("team/$id/members/$userId".uri, request.toJson()).errorsOn(const {401}).expect(const {204});
 
   Future<void> removeMember(String id, String userId) =>

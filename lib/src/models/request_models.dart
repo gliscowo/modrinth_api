@@ -112,6 +112,11 @@ class CreateProject {
   final String? licenseUrl;
   final ModrinthProjectType projectType;
 
+  // deprecated properties to satisfy the API
+  final List<Object> initialVersions = const [];
+  final bool isDraft = true;
+  final List<Object> galleryItems = const [];
+
   const CreateProject(
     this.slug,
     this.title,
@@ -152,7 +157,7 @@ class ModifyVersion {
   @JsonKey(toJson: _primaryFileToJson)
   final (String, String)? primaryFile;
 
-  ModifyVersion({
+  const ModifyVersion({
     this.name,
     this.versionNumber,
     this.changelog,
@@ -181,7 +186,7 @@ class CreateVersion {
   final String versionNumber;
   final String? changelog;
   final List<CreateDependency> dependencies;
-  final List<String>? gameVersions;
+  final List<String> gameVersions;
   final ModrinthVersionType versionType;
   final List<String> loaders;
   final bool featured;
@@ -191,10 +196,11 @@ class CreateVersion {
   final List<String> fileParts;
   final String primaryFile;
 
-  CreateVersion(
+  const CreateVersion(
     this.name,
     this.versionNumber,
     this.dependencies,
+    this.gameVersions,
     this.versionType,
     this.loaders,
     this.featured,
@@ -202,7 +208,6 @@ class CreateVersion {
     this.fileParts,
     this.primaryFile, {
     this.changelog,
-    this.gameVersions,
     this.status,
     this.requestedStatus,
   });
@@ -236,7 +241,7 @@ class ModifyUser {
   final String? bio;
   final ModrinthPayoutData? payoutData;
 
-  ModifyUser(
+  const ModifyUser(
     this.username, {
     this.name,
     this.email,
@@ -258,7 +263,7 @@ class ModifyTeamMember {
   final int? payoutsSplit;
   final int? ordering;
 
-  ModifyTeamMember({
+  const ModifyTeamMember({
     this.role,
     this.permissions,
     this.payoutsSplit,

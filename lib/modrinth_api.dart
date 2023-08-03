@@ -5,5 +5,6 @@ library;
 
 export 'src/models/request_models.dart';
 export 'src/models/response_models.dart';
-export 'src/modrinth_api_base.dart' show ModrinthApi;
+export 'src/modrinth_api_base.dart' show ModrinthApi, RatelimitHandling;
 export 'src/result.dart';
+export 'src/routes/search.dart' show Facet, QueryString;

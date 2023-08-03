@@ -2,6 +2,7 @@ import 'package:modrinth_api/src/errors.dart';
 import 'package:modrinth_api/src/models/request_models.dart';
 import 'package:modrinth_api/src/models/response_models.dart';
 import 'package:modrinth_api/src/modrinth_api_base.dart';
+import 'package:modrinth_api/src/routes/search.dart';
 import 'package:modrinth_api/src/routes/version_files.dart';
 import 'package:test/test.dart';
 
@@ -15,7 +16,7 @@ void main() {
     tearDown(() => modrinth.dispose());
 
     test('search', () async {
-      // expect((await modrinth.search("owo-lib")).hits.first.title, "oωo (owo-lib)");
+      await modrinth.search(facets: (Facet.license("MIT") | Facet.license("LGPL-3.0")) & Facet.version("1.17"));
     });
 
     group('projects', () {

@@ -47,10 +47,30 @@ class ModrinthApi {
     tags = Tags(_client);
   }
 
+  /// Fetch rudimentary statistics about the Labrinth instance
+  /// this API client communicates with
   Future<LabrinthInstanceStatistics> fetchStatistics() =>
       _client.get("statistics".uri).expect(const {200}).parse(LabrinthInstanceStatistics.fromJson);
 
-  Future<ModrinthSearchQueryResponse> search({
+  /// Search projects
+  ///
+  /// The fundamental [query] string is used for text-based filtering
+  /// as done in a search engine. The first [offset] results are
+  /// skipped and at most [limit] results will be returned,
+  /// the order of which is dictated by [index].
+  ///
+  /// One or more [facets] may be supplied to refine the search using
+  /// broader categories, which may be composed using the `&` and `|`
+  /// combinators. Examples are as follows:
+  /// ```dart
+  /// // search for projects which are both licensed under MIT *and* a mod
+  /// modrinth.search(facets: Facet.license("MIT") & Facet.projectType(ModrinthProjectType.mod));
+  ///
+  /// // search for projects which are licensed under either MIT or the
+  /// // LGPL v3 *and* are available for Minecraft 1.17
+  /// modrinth.search(facets: (Facet.license("MIT") | Facet.license("LGPL-3.0")) & Facet.version("1.17"));
+  /// ```
+  Future<ModrinthSearchResponse> search({
     String? query,
     FacetAndBlock? facets,
     ModrinthSearchIndexType? index,
@@ -65,12 +85,12 @@ class ModrinthApi {
       if (limit != null) "limit": limit.toString(),
     }));
 
-    return reponse.errorsOn(const {400}).parse(ModrinthSearchQueryResponse.fromJson);
+    return reponse.errorsOn(const {400}).parse(ModrinthSearchResponse.fromJson);
   }
 
-  /// Closes the HTTP client associated with this API client.
+  /// Close the HTTP client associated with this API client.
   ///
-  /// This **needs** to be called at the end of an application's lifecycle,
+  /// This needs to be called at the end of an application's lifecycle,
   /// otherwise the process will hang and not exit
   void dispose() => _client.close();
 }

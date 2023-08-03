@@ -103,7 +103,7 @@ class Projects {
     String? description,
     int? ordering,
   }) {
-    var reponse = _client.patch("project/$idOrSlug/icon".uri.replace(queryParameters: {
+    var reponse = _client.patch("project/$idOrSlug/gallery".uri.replace(queryParameters: {
       "url": url,
       if (featured != null) "featured": featured.toString(),
       if (title != null) "title": title,
@@ -150,7 +150,7 @@ class Projects {
 
   Future<void> schedule(String idOrSlug, DateTime time, ModrinthProjectStatus requestedStatus) =>
       _client.postJson("project/$idOrSlug/schedule".uri, {
-        "time": time.toIso8601String(),
+        "time": time.toUtc().toIso8601String(),
         "requested_status": requestedStatus,
       }).errorsOn(const {400, 401}).expect(const {204});
 }

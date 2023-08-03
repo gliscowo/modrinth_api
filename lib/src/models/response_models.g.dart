@@ -280,9 +280,9 @@ Map<String, dynamic> _$ModrinthSearchResultToJson(
   return val;
 }
 
-ModrinthSearchQueryResponse _$ModrinthSearchQueryResponseFromJson(
+ModrinthSearchResponse _$ModrinthSearchResponseFromJson(
         Map<String, dynamic> json) =>
-    ModrinthSearchQueryResponse(
+    ModrinthSearchResponse(
       (json['hits'] as List<dynamic>)
           .map((e) => ModrinthSearchResult.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -291,8 +291,8 @@ ModrinthSearchQueryResponse _$ModrinthSearchQueryResponseFromJson(
       json['total_hits'] as int,
     );
 
-Map<String, dynamic> _$ModrinthSearchQueryResponseToJson(
-        ModrinthSearchQueryResponse instance) =>
+Map<String, dynamic> _$ModrinthSearchResponseToJson(
+        ModrinthSearchResponse instance) =>
     <String, dynamic>{
       'hits': instance.hits,
       'offset': instance.offset,
@@ -622,7 +622,7 @@ ModrinthTeamMember _$ModrinthTeamMemberFromJson(Map<String, dynamic> json) =>
           ? null
           : ModrinthPermissions.fromJson(json['permissions'] as int),
       json['accepted'] as bool,
-      json['payouts_split'] as int?,
+      (json['payouts_split'] as num?)?.toDouble(),
       json['ordering'] as int?,
     );
 
