@@ -1,7 +1,6 @@
 name: modrinth_api
-description: A basic wrapper for most of Modrinth's API
+description: A comprehensive (August 2023), type-safe client library for the Modrinth API
 version: 0.1.0
-# homepage: https://www.example.com
 
 environment:
   sdk: '^3.0.1'
