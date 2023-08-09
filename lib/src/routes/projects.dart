@@ -39,7 +39,7 @@ class Projects {
       .errorsOn(const {400}).expect(const {200}).parse<JsonArray, Iterable<ModrinthProject>>(
           (json) => json.cast<JsonObject>().map(ModrinthProject.fromJson));
 
-  Future<void> create(CreateProject project, {({Uint8List data, String filename})? icon}) {
+  Future<ModrinthProject> create(CreateProject project, {({Uint8List data, String filename})? icon}) {
     final request = MultipartRequest("POST", _client.route("project".uri))
       ..fields["data"] = jsonEncode(project.toJson());
     if (icon != null) {
@@ -51,7 +51,9 @@ class Projects {
       ));
     }
 
-    return _client.sendUnstreamed(request).errorsOn(const {400, 401}).expect(const {200});
+    return _client
+        .sendUnstreamed(request)
+        .errorsOn(const {400, 401}).expect(const {200}).parse<JsonObject, ModrinthProject>(ModrinthProject.fromJson);
   }
 
   Future<void> updateIcon(String idOrSlug, Uint8List iconData, String iconFilename) {

@@ -23,7 +23,7 @@ class Versions {
 
   Future<void> delete(String id) => _client.delete("version/$id".uri).errorsOn(const {401}).expect(const {204});
 
-  Future<void> create(CreateVersion version, List<File> files) async {
+  Future<ModrinthVersion> create(CreateVersion version, List<File> files) async {
     final request = MultipartRequest("POST", _client.route("version".uri))
       ..fields["data"] = jsonEncode(version.toJson());
     for (final (idx, file) in files.indexed) {
@@ -42,7 +42,9 @@ class Versions {
       ));
     }
 
-    await _client.sendUnstreamed(request).errorsOn(const {400, 401}).expect(const {200});
+    return _client
+        .sendUnstreamed(request)
+        .errorsOn(const {400, 401}).expect(const {200}).parse<JsonObject, ModrinthVersion>(ModrinthVersion.fromJson);
   }
 
   Future<void> schedule(String id, DateTime time, ModrinthVersionStatus requestedStatus) =>
