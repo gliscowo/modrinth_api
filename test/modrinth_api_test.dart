@@ -9,11 +9,11 @@ import 'package:test/test.dart';
 void main() {
   group('modrinth api', () {
     late ModrinthApi modrinth;
-    setUp(() {
+    setUpAll(() {
       modrinth = ModrinthApi.createClient("gliscowo/modrinth_api/test-runner");
     });
 
-    tearDown(() => modrinth.dispose());
+    tearDownAll(() => modrinth.dispose());
 
     test('search', () async {
       await modrinth.search(facets: (Facet.license("MIT") | Facet.license("LGPL-3.0")) & Facet.version("1.17"));
