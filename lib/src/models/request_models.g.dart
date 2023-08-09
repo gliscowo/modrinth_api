@@ -190,19 +190,8 @@ Map<String, dynamic> _$CreateVersionToJson(CreateVersion instance) {
   return val;
 }
 
-CreateDependency _$CreateDependencyFromJson(Map<String, dynamic> json) =>
-    CreateDependency(
-      json['version_id'] as String,
-      json['project_id'] as String,
-      $enumDecode(_$ModrinthDependencyTypeEnumMap, json['dependency_type']),
-      fileName: json['file_name'] as String?,
-    );
-
 Map<String, dynamic> _$CreateDependencyToJson(CreateDependency instance) {
-  final val = <String, dynamic>{
-    'version_id': instance.versionId,
-    'project_id': instance.projectId,
-  };
+  final val = <String, dynamic>{};
 
   void writeNotNull(String key, dynamic value) {
     if (value != null) {
@@ -210,7 +199,9 @@ Map<String, dynamic> _$CreateDependencyToJson(CreateDependency instance) {
     }
   }
 
+  writeNotNull('version_id', instance.versionId);
   writeNotNull('file_name', instance.fileName);
+  val['project_id'] = instance.projectId;
   val['dependency_type'] =
       _$ModrinthDependencyTypeEnumMap[instance.dependencyType]!;
   return val;
@@ -222,17 +213,6 @@ const _$ModrinthDependencyTypeEnumMap = {
   ModrinthDependencyType.incompatible: 'incompatible',
   ModrinthDependencyType.embedded: 'embedded',
 };
-
-ModifyUser _$ModifyUserFromJson(Map<String, dynamic> json) => ModifyUser(
-      json['username'] as String,
-      name: json['name'] as String?,
-      email: json['email'] as String?,
-      bio: json['bio'] as String?,
-      payoutData: json['payout_data'] == null
-          ? null
-          : ModrinthPayoutData.fromJson(
-              json['payout_data'] as Map<String, dynamic>),
-    );
 
 Map<String, dynamic> _$ModifyUserToJson(ModifyUser instance) {
   final val = <String, dynamic>{
@@ -251,16 +231,6 @@ Map<String, dynamic> _$ModifyUserToJson(ModifyUser instance) {
   writeNotNull('payout_data', instance.payoutData);
   return val;
 }
-
-ModifyTeamMember _$ModifyTeamMemberFromJson(Map<String, dynamic> json) =>
-    ModifyTeamMember(
-      role: json['role'] as String?,
-      permissions: json['permissions'] == null
-          ? null
-          : ModrinthPermissions.fromJson(json['permissions'] as int),
-      payoutsSplit: json['payouts_split'] as int?,
-      ordering: json['ordering'] as int?,
-    );
 
 Map<String, dynamic> _$ModifyTeamMemberToJson(ModifyTeamMember instance) {
   final val = <String, dynamic>{};

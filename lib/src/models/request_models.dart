@@ -218,22 +218,27 @@ class CreateVersion {
   String toString() => encoder.convert(toJson());
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class CreateDependency {
-  final String versionId;
-  final String projectId;
+  final String? versionId;
   final String? fileName;
+  final String projectId;
   final ModrinthDependencyType dependencyType;
 
   CreateDependency(
-    this.versionId,
     this.projectId,
     this.dependencyType, {
     this.fileName,
+    this.versionId,
   });
+
+  Map<String, dynamic> toJson() => _$CreateDependencyToJson(this);
+
+  @override
+  String toString() => encoder.convert(toJson());
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class ModifyUser {
   final String username;
   final String? name;
@@ -255,7 +260,7 @@ class ModifyUser {
   String toString() => encoder.convert(toJson());
 }
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class ModifyTeamMember {
   final String? role;
   @JsonKey(toJson: ModrinthPermissions.toJson)
