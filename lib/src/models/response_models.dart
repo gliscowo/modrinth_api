@@ -182,6 +182,7 @@ enum ModrinthProjectType {
   shader,
   plugin,
   datapack,
+  project, // wtf?
 }
 
 // --- searching ---
