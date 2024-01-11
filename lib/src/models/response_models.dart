@@ -180,6 +180,8 @@ enum ModrinthProjectType {
   modpack,
   resourcepack,
   shader,
+  plugin,
+  datapack,
 }
 
 // --- searching ---

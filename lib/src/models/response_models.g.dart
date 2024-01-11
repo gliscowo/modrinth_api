@@ -107,6 +107,8 @@ const _$ModrinthProjectTypeEnumMap = {
   ModrinthProjectType.modpack: 'modpack',
   ModrinthProjectType.resourcepack: 'resourcepack',
   ModrinthProjectType.shader: 'shader',
+  ModrinthProjectType.plugin: 'plugin',
+  ModrinthProjectType.datapack: 'datapack',
 };
 
 const _$ModrinthProjectStatusEnumMap = {

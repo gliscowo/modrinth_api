@@ -120,6 +120,8 @@ const _$ModrinthProjectTypeEnumMap = {
   ModrinthProjectType.modpack: 'modpack',
   ModrinthProjectType.resourcepack: 'resourcepack',
   ModrinthProjectType.shader: 'shader',
+  ModrinthProjectType.plugin: 'plugin',
+  ModrinthProjectType.datapack: 'datapack',
 };
 
 Map<String, dynamic> _$ModifyVersionToJson(ModifyVersion instance) {

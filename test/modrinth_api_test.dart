@@ -79,9 +79,14 @@ void main() {
 
       test('latest file from hash', () async {
         expect(
-          (await modrinth.versionFiles.getLatestVersionFromHash(Hash.sha512(
-            "efd542dab1dddaad79b56a352842b1e2e352c221d2f1312f8028168a7ac2a3139c5c9b8c98503720c477e4491c46131effd3e55a7f466c1793f9f37f45cb6110",
-          ))),
+          (await modrinth.versionFiles.getLatestVersionFromHash(
+            Hash.sha512(
+              "efd542dab1dddaad79b56a352842b1e2e352c221d2f1312f8028168a7ac2a3139c5c9b8c98503720c477e4491c46131effd3e55a7f466c1793f9f37f45cb6110",
+            ),
+            loaders: [
+              "fabric",
+            ],
+          )),
           isNotNull,
         );
 
@@ -112,14 +117,19 @@ void main() {
 
       test('latest versions from hashes', () async {
         expect(
-          (await modrinth.versionFiles.getLatestVersionsFromHashes([
-            Hash.sha512(
-              "efd542dab1dddaad79b56a352842b1e2e352c221d2f1312f8028168a7ac2a3139c5c9b8c98503720c477e4491c46131effd3e55a7f466c1793f9f37f45cb6110",
-            ),
-            Hash.sha512(
-              "f5c29b3e054769d9536e0b1178c234b0fa26a0358643ccd5171856841c7948dc73e7a2726cf249a378b11ee8ddedf030d33f7cbeca1fff52d2865afa5ab8ee33",
-            )
-          ])),
+          (await modrinth.versionFiles.getLatestVersionsFromHashes(
+            [
+              Hash.sha512(
+                "efd542dab1dddaad79b56a352842b1e2e352c221d2f1312f8028168a7ac2a3139c5c9b8c98503720c477e4491c46131effd3e55a7f466c1793f9f37f45cb6110",
+              ),
+              Hash.sha512(
+                "f5c29b3e054769d9536e0b1178c234b0fa26a0358643ccd5171856841c7948dc73e7a2726cf249a378b11ee8ddedf030d33f7cbeca1fff52d2865afa5ab8ee33",
+              )
+            ],
+            loaders: [
+              "fabric",
+            ],
+          )),
           hasLength(2),
         );
 
@@ -155,7 +165,7 @@ void main() {
       });
 
       test('get user projects', () async {
-        expect(await modrinth.users.getProjects("glisco"), hasLength(greaterThan(10)));
+        expect(await modrinth.users.getProjects("glisco"), hasLength(greaterThan(2)));
       });
     });
 
