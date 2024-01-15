@@ -100,6 +100,7 @@ const _$ModrinthSideSupportEnumMap = {
   ModrinthSideSupport.required: 'required',
   ModrinthSideSupport.optional: 'optional',
   ModrinthSideSupport.unsupported: 'unsupported',
+  ModrinthSideSupport.unknown: 'unknown',
 };
 
 const _$ModrinthProjectTypeEnumMap = {

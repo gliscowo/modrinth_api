@@ -8,6 +8,7 @@ enum ModrinthSideSupport {
   required,
   optional,
   unsupported,
+  unknown,
 }
 
 // --- projects ---
